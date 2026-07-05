@@ -77,13 +77,11 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
   }, [facingMode])
 
   useEffect(() => {
-    startCamera()
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((t) => t.stop())
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const switchCamera = () => {
@@ -185,12 +183,14 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
         <span className="font-display text-lg font-bold text-gradient-lilac">
           🌸 Photobooth
         </span>
-        <CuteButton
-          variant="ghost"
-          size="sm"
-          onClick={switchCamera}
-          icon={<SwitchCamera className="h-4 w-4" />}
-        />
+        {status === 'active' && (
+          <CuteButton
+            variant="ghost"
+            size="sm"
+            onClick={switchCamera}
+            icon={<SwitchCamera className="h-4 w-4" />}
+          />
+        )}
       </div>
 
       {/* Camera viewport */}
@@ -230,7 +230,19 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
                 Coba Lagi
               </CuteButton>
             </div>
-          ) : null}
+          ) : (
+            <div className="flex h-full cursor-pointer flex-col items-center justify-center gap-4 text-white/90 transition-colors hover:text-white" onClick={startCamera}>
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                <Camera className="h-10 w-10 animate-float-bob" />
+              </div>
+              <p className="font-display text-lg font-bold drop-shadow-lg">
+                Mulai Kamera 📸
+              </p>
+              <p className="font-body max-w-[200px] text-center text-xs text-white/60">
+                Klik untuk mengaktifkan kamera
+              </p>
+            </div>
+          )}
 
           {/* Flash effect */}
           {flash && (
