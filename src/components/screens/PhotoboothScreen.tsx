@@ -207,31 +207,22 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
           <span className="absolute bottom-3 left-3 z-20 text-xl animate-twinkle" style={{ animationDelay: '1.2s' }}>💕</span>
           <span className="absolute bottom-3 right-3 z-20 text-xl animate-twinkle" style={{ animationDelay: '0.4s' }}>✨</span>
 
-          {/* Video / States */}
-          {status === 'active' ? (
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              muted
-              className="h-full w-full object-cover"
-              style={{ filter: selectedFilter.cssFilter, transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
-            />
-          ) : status === 'requesting' ? (
-            <div className="flex h-full flex-col items-center justify-center gap-3 text-white/80">
-              <Camera className="h-10 w-10 animate-pulse" />
-              <p className="font-display text-sm">Memuat kamera... 🌸</p>
-            </div>
-          ) : status === 'error' ? (
-            <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center text-white/90">
-              <AlertCircle className="h-10 w-10 text-blush" />
-              <p className="font-display text-sm">{errorMsg}</p>
-              <CuteButton size="sm" onClick={startCamera}>
-                Coba Lagi
-              </CuteButton>
-            </div>
-          ) : (
-            <div className="flex h-full cursor-pointer flex-col items-center justify-center gap-4 text-white/90 transition-colors hover:text-white" onClick={startCamera}>
+          {/* Video — always rendered so ref is always available */}
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className={cn(
+              'absolute inset-0 h-full w-full object-cover transition-opacity duration-300',
+              status === 'active' ? 'opacity-100' : 'opacity-0',
+            )}
+            style={{ filter: selectedFilter.cssFilter, transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
+          />
+
+          {/* State overlays */}
+          {status === 'idle' && (
+            <div className="absolute inset-0 z-10 flex cursor-pointer flex-col items-center justify-center gap-4 text-white/90 transition-colors hover:text-white" onClick={startCamera}>
               <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
                 <Camera className="h-10 w-10 animate-float-bob" />
               </div>
@@ -241,6 +232,21 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
               <p className="font-body max-w-[200px] text-center text-xs text-white/60">
                 Klik untuk mengaktifkan kamera
               </p>
+            </div>
+          )}
+          {status === 'requesting' && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 text-white/80">
+              <Camera className="h-10 w-10 animate-pulse" />
+              <p className="font-display text-sm">Memuat kamera... 🌸</p>
+            </div>
+          )}
+          {status === 'error' && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 px-6 text-center text-white/90">
+              <AlertCircle className="h-10 w-10 text-blush" />
+              <p className="font-display text-sm">{errorMsg}</p>
+              <CuteButton size="sm" onClick={startCamera}>
+                Coba Lagi
+              </CuteButton>
             </div>
           )}
 
