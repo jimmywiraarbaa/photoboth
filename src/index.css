@@ -1,0 +1,175 @@
+@import 'tailwindcss';
+
+/* ==================== TAILWIND v4 THEME ==================== */
+@theme {
+  /* ---- Lilac Palette ---- */
+  --color-lilac-50: #faf5ff;
+  --color-lilac-100: #f3e8ff;
+  --color-lilac-200: #e9d5ff;
+  --color-lilac-300: #d8b4fe;
+  --color-lilac-400: #c084fc;
+  --color-lilac-500: #a855f7;
+  --color-lilac-600: #9333ea;
+  --color-lilac-700: #7e22ce;
+  --color-lilac-800: #6b21a8;
+  --color-lilac-900: #581c87;
+
+  /* ---- Soft Accents ---- */
+  --color-blush: #fbcfe8;
+  --color-blush-light: #fce7f3;
+  --color-mint: #bbf7d0;
+  --color-peach: #fed7aa;
+  --color-butter: #fef3c7;
+  --color-sky: #bae6fd;
+
+  /* ---- Ink (Text) ---- */
+  --color-ink: #4a3b5c;
+  --color-ink-soft: #7c6f91;
+  --color-ink-faint: #a89bc0;
+
+  /* ---- Fonts ---- */
+  --font-display: 'Baloo 2', system-ui, sans-serif;
+  --font-body: 'Quicksand', system-ui, sans-serif;
+
+  /* ---- Shadows (lilac-tinted) ---- */
+  --shadow-cute: 0 4px 20px rgba(168, 85, 247, 0.15);
+  --shadow-cute-lg: 0 8px 40px rgba(168, 85, 247, 0.2);
+  --shadow-glow: 0 0 24px rgba(192, 132, 252, 0.4);
+
+  /* ---- Keyframe Animations ---- */
+  --animate-float-bob: float-bob 4s ease-in-out infinite;
+  --animate-float-bob-slow: float-bob 6s ease-in-out infinite;
+  --animate-twinkle: twinkle 2.5s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-bounce-in: bounce-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-wiggle: wiggle 0.6s ease-in-out;
+  --animate-pop-in: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-shimmer: shimmer 2s linear infinite;
+}
+
+/* ==================== KEYFRAMES ==================== */
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-4deg); }
+  75% { transform: rotate(4deg); }
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ==================== GLOBAL BASE ==================== */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: linear-gradient(160deg, #faf5ff 0%, #fce7f3 50%, #f3e8ff 100%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle dot pattern overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(192, 132, 252, 0.07) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-lilac-300);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-lilac-400);
+}
+
+/* ==================== SELECTION ==================== */
+::selection {
+  background: var(--color-lilac-200);
+  color: var(--color-lilac-800);
+}
+
+/* ==================== UTILITY ==================== */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-gradient-lilac {
+  background: linear-gradient(135deg, #c084fc 0%, #fbcfe8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-lilac {
+  background: rgba(243, 232, 255, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
