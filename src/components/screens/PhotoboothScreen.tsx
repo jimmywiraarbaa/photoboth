@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Camera, SwitchCamera, AlertCircle, Sparkles } from 'lucide-react'
+import { Camera, AlertCircle, Sparkles } from 'lucide-react'
 import { CuteButton } from '../ui/CuteButton'
 import { PillBadge, SegmentedToggle } from '../ui/PillBadge'
 import { cn } from '../../lib/cn'
@@ -41,7 +41,6 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
 
   const [status, setStatus] = useState<CameraStatus>('idle')
   const [errorMsg, setErrorMsg] = useState('')
-  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user')
   const [selectedFilter, setSelectedFilter] = useState<FilterDef>(FILTERS[0])
   const [mode, setMode] = useState<CaptureMode>('strip')
   const [countdown, setCountdown] = useState<number | null>(null)
@@ -57,7 +56,7 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
         streamRef.current.getTracks().forEach((t) => t.stop())
       }
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
         audio: false,
       })
       streamRef.current = stream
@@ -74,7 +73,7 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
           : 'Tidak bisa mengakses kamera. Pastikan izinkan kamera di browser.'
       )
     }
-  }, [facingMode])
+  }, [])
 
   useEffect(() => {
     return () => {
@@ -83,11 +82,6 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
       }
     }
   }, [])
-
-  const switchCamera = () => {
-    setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'))
-    setTimeout(() => startCamera(), 100)
-  }
 
   const captureFrame = useCallback((): string => {
     const video = videoRef.current
@@ -102,7 +96,10 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
     if (!ctx) return ''
 
     ctx.filter = selectedFilter.cssFilter === 'none' ? 'none' : selectedFilter.cssFilter
-    ctx.drawImage(video, 0, 0, w, h)
+    ctx.save()
+    ctx.scale(-1, 1)
+    ctx.drawImage(video, -w, 0, w, h)
+    ctx.restore()
 
     setFlash(true)
     setTimeout(() => setFlash(false), 250)
@@ -183,14 +180,7 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
         <span className="font-display text-lg font-bold text-gradient-lilac">
           🌸 Photobooth
         </span>
-        {status === 'active' && (
-          <CuteButton
-            variant="ghost"
-            size="sm"
-            onClick={switchCamera}
-            icon={<SwitchCamera className="h-4 w-4" />}
-          />
-        )}
+        <div className="w-9" />
       </div>
 
       {/* Camera viewport */}
@@ -217,7 +207,7 @@ export function PhotoboothScreen({ onBack, onCaptureDone, stripLayout, onStripLa
               'absolute inset-0 h-full w-full object-cover transition-opacity duration-300',
               status === 'active' ? 'opacity-100' : 'opacity-0',
             )}
-            style={{ filter: selectedFilter.cssFilter, transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
+            style={{ filter: selectedFilter.cssFilter, transform: 'scaleX(-1)' }}
           />
 
           {/* State overlays */}
